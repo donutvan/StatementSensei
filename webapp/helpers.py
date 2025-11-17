@@ -12,7 +12,10 @@ from monopoly.pipeline import Pipeline
 from monopoly.statements.base import SafetyCheckError
 from pydantic import SecretStr
 
+from webapp.categorization import categorize_dataframe
 from webapp.models import ProcessedFile, TransactionMetadata
+from webapp.pipeline import extract_transactions, normalize_transactions
+from webapp.storage import persist_transactions
 
 
 def _coerce_date(value: Any) -> date | None:
@@ -66,7 +69,7 @@ def _extract_statement_period(statement: Any) -> tuple[date | None, date | None]
     return start_date, end_date
 
 
-def _extract_metadata(statement: Any, bank_name: str) -> TransactionMetadata:
+def _extract_metadata(statement: Any, bank_name: str, source_file: str) -> TransactionMetadata:
     account_number = getattr(statement, "account_number", None) or getattr(
         getattr(statement, "account", None), "number", None
     )
@@ -74,12 +77,19 @@ def _extract_metadata(statement: Any, bank_name: str) -> TransactionMetadata:
         getattr(statement, "currency", None)
         or getattr(getattr(statement, "config", None), "currency", None)
     )
+    account_type = (
+        getattr(statement, "account_type", None)
+        or getattr(getattr(statement, "account", None), "account_type", None)
+        or getattr(getattr(statement, "account", None), "type", None)
+    )
     statement_start, statement_end = _extract_statement_period(statement)
 
     return TransactionMetadata(
         bank_name=bank_name,
+        source_file=source_file,
         account_number=account_number,
         currency=currency,
+        account_type=account_type,
         statement_start=statement_start,
         statement_end=statement_end,
     )
@@ -145,52 +155,41 @@ def parse_bank_statement(document: PdfDocument, password: str | None = None) -> 
             icon="⚠️",
         )
 
-    metadata = _extract_metadata(statement, bank_name)
+    metadata = _extract_metadata(statement, bank_name, document.name)
     return ProcessedFile(pipeline.transform(statement), metadata)
 
 
 def create_df(processed_files: list[ProcessedFile]) -> pd.DataFrame:
-    dataframes = []
-    for file in processed_files:
-        df = pd.DataFrame(file)
-        df["date"] = pd.to_datetime(df["date"]).dt.date
-        df["bank"] = file.metadata.bank_name
-        df["currency"] = file.metadata.currency
-        df["account_number"] = file.metadata.account_number
-        df["statement_start"] = file.metadata.statement_start
-        df["statement_end"] = file.metadata.statement_end
-
-        df["credit"] = df["amount"].apply(lambda x: x if x > 0 else 0)
-        df["debit"] = df["amount"].apply(lambda x: abs(x) if x < 0 else 0)
-        if "polarity" in df.columns:
-            normalized = df["polarity"].fillna("").astype(str).str.lower()
-            df["is_credit"] = normalized.str.contains("credit")
-            df["is_debit"] = normalized.str.contains("debit")
-        else:
-            df["is_credit"] = df["amount"] > 0
-            df["is_debit"] = df["amount"] < 0
-
-        dataframes.append(df)
-
-    concat_df = pd.concat(dataframes)
-    st.session_state["df"] = concat_df
-    return concat_df
+    raw_df = extract_transactions(processed_files)
+    normalized_df = normalize_transactions(raw_df)
+    categorized_df = categorize_dataframe(normalized_df)
+    persist_transactions(categorized_df)
+    st.session_state["df"] = categorized_df
+    return categorized_df
 
 
 def show_df(df: pd.DataFrame) -> None:
     desired_order = [
         "date",
-        "description",
+        "description_raw",
         "amount",
-        "debit",
-        "credit",
+        "direction",
+        "balance",
+        "category",
         "bank",
         "account_number",
+        "account_type",
         "currency",
+        "source_file",
     ]
     columns_to_use = [col for col in desired_order if col in df.columns]
     df = df[columns_to_use]
-    df.columns = [col.title() for col in df.columns]
+    df = df.rename(
+        columns={
+            "description_raw": "description",
+        }
+    )
+    df.columns = [col.replace("_", " ").title() for col in df.columns]
     st.dataframe(
         df.style.format(
             {

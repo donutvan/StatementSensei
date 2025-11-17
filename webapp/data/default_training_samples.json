@@ -1,0 +1,22 @@
+[
+  {"description": "FAIRPRICE FINEST 123", "category": "Groceries"},
+  {"description": "NTUC ONLINE", "category": "Groceries"},
+  {"description": "SHENG SIONG MARKET", "category": "Groceries"},
+  {"description": "COLD STORAGE PLAZA", "category": "Groceries"},
+  {"description": "GRABFOOD ORDER 123", "category": "Food Delivery"},
+  {"description": "FOODPANDA SVC", "category": "Food Delivery"},
+  {"description": "DELIVEROO SG", "category": "Food Delivery"},
+  {"description": "SP GROUP UTIL", "category": "Utilities"},
+  {"description": "SINGTEL BILL", "category": "Utilities"},
+  {"description": "STARHUB MOBILE", "category": "Utilities"},
+  {"description": "COMFORT TAXI", "category": "Transport"},
+  {"description": "MRT TOP UP", "category": "Transport"},
+  {"description": "EZ-LINK RELOAD", "category": "Transport"},
+  {"description": "NETFLIX.COM", "category": "Subscriptions"},
+  {"description": "SPOTIFY FAMILY", "category": "Subscriptions"},
+  {"description": "MICROSOFT 365", "category": "Subscriptions"},
+  {"description": "PAYROLL CREDIT", "category": "Salary"},
+  {"description": "GIRO CREDIT COMPANY", "category": "Salary"},
+  {"description": "TIGER BROKERS SGD", "category": "Investments"},
+  {"description": "IBKR DEPOSIT", "category": "Investments"}
+]
