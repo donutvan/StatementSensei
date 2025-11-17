@@ -1,3 +1,5 @@
+import hashlib
+
 import pandas as pd
 import streamlit as st
 from monopoly.pdf import MissingPasswordError, PdfDocument
@@ -31,6 +33,12 @@ def app() -> pd.DataFrame:
 
     if df is not None:
         show_df(df)
+        st.info(
+            "Jump into the dashboard for interactive filters and cash-flow charts.",
+            icon="📊",
+        )
+        if st.button("Open dashboard", key="open-dashboard"):
+            st.switch_page("pages/1_visualizations.py")
 
     return df
 
@@ -47,21 +55,24 @@ def process_files(uploaded_files: list[UploadedFile]) -> list[ProcessedFile] | N
             pbar.progress(i / num_files, text=f"Processing {file.name}")
 
         file_bytes = file.getvalue()
+        file_hash = hashlib.sha256(file_bytes).hexdigest()
         document = PdfDocument(file_bytes=file_bytes)
         document._name = file.name
 
         # attempt to use passwords stored in environment to unlock
         # if no passwords in environment, then ask user for password
+        password: str | None = None
         if document.is_encrypted:  # pylint: disable=no-member
             try:
                 document = document.unlock_document()
 
             except MissingPasswordError:
-                document = handle_encrypted_document(document)
+                document, password = handle_encrypted_document(document)
 
         if document:
-            processed_file = handle_file(document)
-            processed_files.append(processed_file)
+            processed_file = handle_file(document, file_hash, password=password)
+            if processed_file:
+                processed_files.append(processed_file)
 
     if pbar:
         pbar.empty()
@@ -69,25 +80,50 @@ def process_files(uploaded_files: list[UploadedFile]) -> list[ProcessedFile] | N
     return processed_files
 
 
-def handle_file(document: PdfDocument) -> ProcessedFile | None:
-    document_id = document.xref_get_key(-1, "ID")[-1]
-    uuid = document.name + document_id
-    if uuid in st.session_state:
-        return st.session_state[uuid]
+def handle_file(
+    document: PdfDocument, cache_key: str | None, password: str | None = None
+) -> ProcessedFile | None:
+    cache_keys: list[str] = []
+    if cache_key:
+        cache_keys.append(cache_key)
 
-    file = parse_bank_statement(document)
-    st.session_state[uuid] = file
+    document_id = None
+    try:
+        document_id = document.xref_get_key(-1, "ID")[-1]
+    except (AttributeError, TypeError, IndexError):
+        document_id = None
+
+    if document_id:
+        cache_keys.append(document.name + document_id)
+
+    for key in cache_keys:
+        if key in st.session_state:
+            return st.session_state[key]
+
+    try:
+        file = parse_bank_statement(document, password=password)
+    except Exception as exc:  # pylint: disable=broad-except
+        st.error(
+            f"Failed to parse {document.name}: {exc}",
+            icon="❌",
+        )
+        return None
+
+    for key in cache_keys:
+        st.session_state[key] = file
     return file
 
 
-def handle_encrypted_document(document: PdfDocument) -> PdfDocument | None:
+def handle_encrypted_document(
+    document: PdfDocument,
+) -> tuple[PdfDocument | None, str | None]:
     passwords: list[str] = st.session_state.setdefault("pdf_passwords", [])
 
     # Try existing passwords first
     for password in passwords:
         document.authenticate(password)
         if not document.is_encrypted:  # pylint: disable=no-member
-            return document
+            return document, password
 
     # Prompt user for password if none of the existing passwords work
     password_container = st.empty()
@@ -99,17 +135,17 @@ def handle_encrypted_document(document: PdfDocument) -> PdfDocument | None:
     )
 
     if not password:
-        return None
+        return None, None
 
     document.authenticate(password)
 
     if not document.is_encrypted:  # pylint: disable=no-member
         passwords.append(password)
         password_container.empty()
-        return document
+        return document, password
 
     st.error("Wrong password. Please try again.")
-    return None
+    return None, None
 
 
 def get_files() -> list[UploadedFile]:

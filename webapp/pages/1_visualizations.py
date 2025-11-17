@@ -43,12 +43,12 @@ def show_stacked_bar_chart(df: pd.DataFrame):
 
     savings_trace = go.Scatter(
         x=df.index,
-        y=df["Income"] - df["Expenses"],
+        y=df["Net"],
         name="Savings",
         mode="lines",
         line={"color": "black", "width": 4},
         hoverinfo="text+name",
-        text=[f"${s:,.2f}" for s in df["amount"]],
+        text=[f"${s:,.2f}" for s in df["Net"]],
     )
 
     layout = go.Layout(
@@ -74,7 +74,7 @@ def show_stacked_bar_chart(df: pd.DataFrame):
 
     total_income = round(df["Income"].sum())
     total_expenses = round(df["Expenses"].sum())
-    total_savings = round(df["amount"].sum())
+    total_savings = round(df["Net"].sum())
 
     # Avoid division by zero
     savings_rate = total_savings / total_income * 100 if total_income > 0 else 0
@@ -93,18 +93,94 @@ def show_stacked_bar_chart(df: pd.DataFrame):
 
 st.markdown("# Visualizations")
 
-if "df" in st.session_state:
-    df: pd.DataFrame = st.session_state["df"].copy()
-    df.index = pd.to_datetime(df["date"])
-    df["Bank"] = df["bank"]
-    df["Income"] = df["amount"].apply(lambda x: max(0, x))
-    df["Expenses"] = df["amount"].apply(lambda x: abs(x) if x < 0 else 0)
-    df = df.drop(columns=["description", "date"])
-    df = df.resample("MS").sum()
-
-    show_stacked_bar_chart(df)
-
 if "df" not in st.session_state:
     switch_page_button = st.button("Convert a bank statement")
     if switch_page_button:
         st.switch_page("app.py")
+else:
+    df: pd.DataFrame = st.session_state["df"].copy()
+    df["date"] = pd.to_datetime(df["date"])
+
+    min_date = df["date"].min().date()
+    max_date = df["date"].max().date()
+    banks = sorted(df["bank"].dropna().unique())
+    accounts = sorted(df["account_number"].dropna().unique())
+    currencies = sorted(df["currency"].dropna().unique())
+
+    st.subheader("Filters")
+    bank_col, account_col = st.columns(2)
+    selected_banks = bank_col.multiselect(
+        "Banks",
+        options=banks,
+        default=banks,
+    )
+    selected_accounts = account_col.multiselect(
+        "Accounts",
+        options=accounts,
+        default=accounts,
+        help="Filter specific account numbers when multiple statements are combined.",
+    )
+
+    date_col, currency_col = st.columns([2, 1])
+    selected_range = date_col.date_input(
+        "Statement period",
+        value=(min_date, max_date),
+        min_value=min_date,
+        max_value=max_date,
+    )
+    currency_options = ["All"] + currencies
+    selected_currency = currency_col.selectbox("Currency", options=currency_options)
+
+    filtered_df = df.copy()
+    if banks:
+        if selected_banks:
+            filtered_df = filtered_df[filtered_df["bank"].isin(selected_banks)]
+        else:
+            filtered_df = filtered_df.iloc[0:0]
+    if accounts:
+        if selected_accounts:
+            filtered_df = filtered_df[filtered_df["account_number"].isin(selected_accounts)]
+        else:
+            filtered_df = filtered_df.iloc[0:0]
+    if isinstance(selected_range, (tuple, list)):
+        start_date, end_date = selected_range
+    else:
+        start_date, end_date = selected_range, selected_range
+    filtered_df = filtered_df[
+        (filtered_df["date"].dt.date >= start_date)
+        & (filtered_df["date"].dt.date <= end_date)
+    ]
+    if selected_currency != "All":
+        filtered_df = filtered_df[filtered_df["currency"] == selected_currency]
+
+    if filtered_df.empty:
+        st.warning("No transactions match the selected filters.")
+    else:
+        monthly = (
+            filtered_df.sort_values("date")
+            .set_index("date")
+            .resample("MS")
+            .agg({"credit": "sum", "debit": "sum", "amount": "sum"})
+            .rename(columns={"credit": "Income", "debit": "Expenses", "amount": "Net"})
+        )
+
+        show_stacked_bar_chart(monthly)
+
+        st.caption(
+            f"Showing {len(filtered_df)} transactions from {start_date:%b %d, %Y} to "
+            f"{end_date:%b %d, %Y}."
+        )
+
+        st.subheader("Bank & Account Summary")
+        summary = (
+            filtered_df.groupby(["bank", "account_number", "currency"], dropna=False)["amount"]
+            .sum()
+            .reset_index()
+            .rename(columns={"amount": "net_total"})
+        )
+        summary["net_total"] = summary["net_total"].round(2)
+        st.dataframe(
+            summary,
+            use_container_width=True,
+            hide_index=True,
+        )
