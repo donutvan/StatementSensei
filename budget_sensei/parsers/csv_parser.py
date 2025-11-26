@@ -99,12 +99,18 @@ def normalize_dataframe(df: pd.DataFrame, bank: str = "unknown", source_file: st
         raise NormalizationError("Missing date or description columns")
     amounts = _compute_amount(df)
     directions = _compute_direction(df, amounts)
+    has_direction_col = _pick_column(df, DIRECTION_CANDIDATES) is not None
+    signed_amounts = amounts.astype(float)
+    if has_direction_col:
+        outgoing_mask = directions == "outgoing"
+        signed_amounts = signed_amounts.abs()
+        signed_amounts.loc[outgoing_mask] = -signed_amounts.loc[outgoing_mask]
     parsed_dates = _parse_date_series(df[date_col])
     normalized = pd.DataFrame(
         {
             "date": parsed_dates,
             "description": df[desc_col].astype(str).str.strip(),
-            "amount": amounts.astype(float),
+            "amount": signed_amounts,
             "direction": directions,
             "bank": bank or "unknown",
             "source_file": source_file,
