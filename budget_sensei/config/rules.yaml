@@ -1,0 +1,12 @@
+groceries:
+  - pattern: "WALMART|SAFEWAY|WHOLE FOODS"
+food_and_drink:
+  - pattern: "STARBUCKS|COFFEE|RESTAURANT|UBER EATS"
+transport:
+  - pattern: "UBER|LYFT|SHELL|CHEVRON"
+subscriptions:
+  - pattern: "NETFLIX|SPOTIFY|AMAZON PRIME|APPLE.COM/BILL"
+utilities:
+  - pattern: "PG&E|COMCAST|ATT|UTILITY"
+income:
+  - pattern: "PAYROLL|DIRECT DEP|SALARY"
