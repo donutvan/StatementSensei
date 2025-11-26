@@ -48,17 +48,15 @@ def parse_bank_statement(document: PdfDocument, password: str | None = None) -> 
         except SafetyCheckError:
             st.error(
                 f"Safety check failed for {document.name}, transactions are incorrect or missing",
-                icon="❗",
             )
     if not statement.config.safety_check:
         st.warning(
             f"{bank_name} {statement.config.statement_type} statements have no safety check, "
             "please review your transactions and proceed with caution",
-            icon="⚠️",
         )
 
     if bank_name == "GenericBank":
-        st.warning("Unrecognized bank - using generic parser", icon="⚠️")
+        st.warning("Unrecognized bank - using generic parser")
 
     metadata = TransactionMetadata(bank_name)
     return ProcessedFile(pipeline.transform(statement), metadata)

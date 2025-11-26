@@ -2,7 +2,7 @@
 
 ## [0.10.2] - 2025-09-13
 
-### ⚙️ Miscellaneous Tasks
+### Miscellaneous Tasks
 
 - *(release)* Add hook to automatically update supported banks
 
@@ -12,12 +12,12 @@
 
 ## [0.10.1] - 2025-09-07
 
-### 📚 Documentation
+### Documentation
 
 - *(README)* Fix typo
 - Update supported banks
 
-### ⚙️ Miscellaneous Tasks
+### Miscellaneous Tasks
 
 - Remove -e . from requirements
 - Update regex to properly remove -e .
@@ -28,7 +28,7 @@
 
 ## [0.9.3] - 2025-06-04
 
-### ⚙️ Miscellaneous Tasks
+### Miscellaneous Tasks
 
 - *(release)* Add latest 0.9.2 dist
 - *(ci)* Remove rust cache
@@ -44,20 +44,20 @@
 
 ## [0.9.2] - 2025-06-01
 
-### 🛠️ Bug Fixes
+### Bug Fixes
 
 - *(build)* Add hash to statementsensei tar.gz
 
-### 🚜 Refactor
+### Refactor
 
 - Store password in state and re-use
 
-### 📚 Documentation
+### Documentation
 
 - Add Trust to supported banks
 - *(README)* Fix grammar
 
-### ⚙️ Miscellaneous Tasks
+### Miscellaneous Tasks
 
 - Add 0.7.4 tar file
 - *(ci)* Add stale action
@@ -87,11 +87,11 @@
 
 ## [0.7.4] - 2024-10-05
 
-### ⛰️ Features
+### Features
 
 - *(ci)* Add support for linux/arm64
 
-### 📚 Documentation
+### Documentation
 
 - *(README)* Update installation instructions
 - *(README)* Add updated instructions for docker
@@ -102,7 +102,7 @@
 
 ## [0.7.3] - 2024-09-25
 
-### ⛰️ Features
+### Features
 
 - Add support for custom server address
 
@@ -112,7 +112,7 @@
 
 ## [0.7.2] - 2024-09-15
 
-### ⚙️ Miscellaneous Tasks
+### Miscellaneous Tasks
 
 - Allow pushing to docker hub using custom branch
 
@@ -122,7 +122,7 @@
 
 ## [0.7.1] - 2024-09-15
 
-### ⚙️ Miscellaneous Tasks
+### Miscellaneous Tasks
 
 - Skip release step for development branch
 
@@ -133,27 +133,27 @@
 
 ## [0.7.0] - 2024-09-13
 
-### ⛰️ Features
+### Features
 
 - *(streamlit)* Add cash flow graph
 
-### 🛠️ Bug Fixes
+### Bug Fixes
 
 - *(tauri)* Add pyinstaller hook for ocrmypdf
 - Resample using start of month
 - Add missing plotly dependency
 
-### 🚜 Refactor
+### Refactor
 
 - Show bank name in dataframe by default
 - Cache dataframe when moving between pages
 - *(visualizations)* Show redirect button if no dataframe found
 
-### 🧪 Testing
+### Testing
 
 - Fix order of columns
 
-### ⚙️ Miscellaneous Tasks
+### Miscellaneous Tasks
 
 - Rename pages with page numbers
 - Wait for cashflow graph to load before showing metrics
@@ -161,7 +161,7 @@
 
 ## [0.6.6] - 2024-09-08
 
-### 🚜 Refactor
+### Refactor
 
 - Allow safety check to be disabled for specific banks
 
@@ -171,7 +171,7 @@
 
 ## [0.6.5] - 2024-09-08
 
-### 📚 Documentation
+### Documentation
 
 - Add UOB to supported bank list
 - Add ZKB to supported bank list
@@ -182,20 +182,20 @@
 
 ## [0.6.4] - 2024-09-08
 
-### ⛰️ Features
+### Features
 
 - Add caching for files
 
-### 🛠️ Bug Fixes
+### Bug Fixes
 
 - *(ci)* Pre-commit hook should include ocrmypdf extras
 - Crop pages before applying OCR
 
-### 📚 Documentation
+### Documentation
 
 - *(README)* Add note explaining how to inject pdf passwords
 
-### ⚙️ Miscellaneous Tasks
+### Miscellaneous Tasks
 
 - Add ghostscript deps to streamlit packages
 - Add file name to safety check failure message
@@ -211,23 +211,23 @@
 
 ## [0.6.3] - 2024-09-05
 
-### 🛠️ Bug Fixes
+### Bug Fixes
 
 - *(tauri)* Avoid installing ocrmypdf on windows
 
 ## [0.6.2] - 2024-09-05
 
-### ⚙️ Miscellaneous Tasks
+### Miscellaneous Tasks
 
 - *(ci)* Update tauri with ocrmypdf dependency
 
 ## [0.6.1] - 2024-09-05
 
-### 🛠️ Bug Fixes
+### Bug Fixes
 
 - *(docker)* Add missing ocrmypdf dependency
 
-### ⚙️ Miscellaneous Tasks
+### Miscellaneous Tasks
 
 - Move publish workflow to correct directory
 
@@ -237,23 +237,23 @@
 
 ## [0.6.0] - 2024-09-05
 
-### ⛰️ Features
+### Features
 
 - Add OCR support for HSBC
 - Add progress bar for pdfs
 - *(ci)* Add publish to docker hub workflow
 
-### 🧪 Testing
+### Testing
 
 - Check protected files can be bypassed using env var
 
 ## [0.5.3] - 2024-08-27
 
-### 🛠️ Bug Fixes
+### Bug Fixes
 
 - Use onefile mode for MacOS
 
-### 📚 Documentation
+### Documentation
 
 - *(README)* Add banner for security warnings
 - *(README)* Add note about docker compose
@@ -266,23 +266,23 @@
 
 ## [0.5.1] - 2024-08-17
 
-### ⚙️ Miscellaneous Tasks
+### Miscellaneous Tasks
 
 - Bump monopoly-core to 0.10.8
 
 ## [0.5.0] - 2024-08-16
 
-### ⛰️ Features
+### Features
 
 - Add bank to dataframe
 - Add integration test
 
-### 🚜 Refactor
+### Refactor
 
 - Move supported banks and app description to constants
 - *(ci)* Replace pylint pre-commit with ruff and flake8
 
-### 📚 Documentation
+### Documentation
 
 - *(README)* Update gif
 - *(README)* Add link to core monopoly library
@@ -293,11 +293,11 @@
 
 ## [0.4.5] - 2024-08-11
 
-### 📚 Documentation
+### Documentation
 
 - *(README)* Update usage/install information
 
-### ⚙️ Miscellaneous Tasks
+### Miscellaneous Tasks
 
 - Bump monopoly-core to 0.10.7
 
@@ -309,13 +309,13 @@
 
 ## [0.4.3] - 2024-07-16
 
-### ⛰️ Features
+### Features
 
 - *(tauri)* Enable HTML5 drag and drop
 
 ## [0.4.2] - 2024-07-14
 
-### ⚙️ Miscellaneous Tasks
+### Miscellaneous Tasks
 
 - Add example statement
 
@@ -331,26 +331,26 @@
 
 ## [0.4.0] - 2024-07-07
 
-### 🚜 Refactor
+### Refactor
 
 - Rename app to StatementSensei
 
-### 📚 Documentation
+### Documentation
 
 - *(README)* Add note about installation false postives
 
 ## [0.3.5] - 2024-06-30
 
-### 🛠️ Bug Fixes
+### Bug Fixes
 
 - *(build)* Use onefile for ubuntu
 
-### 🚜 Refactor
+### Refactor
 
 - *(tauri)* Use log crate instead of println
 - *(tauri/pyinstaller)* Use onedir instead of single executable
 
-### ⚙️ Miscellaneous Tasks
+### Miscellaneous Tasks
 
 - Add monopoly-streamlit module to requirements.txt
 - Add linting for hooks
@@ -362,21 +362,21 @@
 
 ## [0.3.4] - 2024-06-25
 
-### 🛠️ Bug Fixes
+### Bug Fixes
 
 - *(streamlit)* Filter out None from list of dfs
 - *(ci)* Install git cliff separately from poetry
 
-### 🚜 Refactor
+### Refactor
 
 - *(streamlit)* Raise warning instead of failure if safety check failed
 
-### 📚 Documentation
+### Documentation
 
 - *(CHANGELOG)* Remove redundant changelog header line
 - Remove old links to monopoly-streamlit repo
 
-### ⚙️ Miscellaneous Tasks
+### Miscellaneous Tasks
 
 - *(CHANGELOG)* Only include latest changes in release
 - Add Optional type hint for password string
@@ -391,22 +391,22 @@
 
 ## [0.3.3] - 2024-06-23
 
-### 🛠️ Bug Fixes
+### Bug Fixes
 
 - Use forked pybadges to address jinja2 bug
 
-### 📚 Documentation
+### Documentation
 
 - *(README)* Re-order info about offline app
 - *(README)* Add list of currently supported banks
 
 ## [0.3.2] - 2024-06-23
 
-### 🚜 Refactor
+### Refactor
 
 - *(streamlit)* Split up file and password handling
 
-### ⚙️ Miscellaneous Tasks
+### Miscellaneous Tasks
 
 - *(tauri)* Add publisher
 - *(tauri)* Include license
@@ -417,35 +417,35 @@
 
 ## [0.3.1] - 2024-06-23
 
-### ⚙️ Miscellaneous Tasks
+### Miscellaneous Tasks
 
 - Bump monopoly-core to 0.9.5
 
 ## [0.3.0] - 2024-06-23
 
-### ⛰️ Features
+### Features
 
 - Create pyinstaller + tauri app
 
-### 🚜 Refactor
+### Refactor
 
 - Move streamlit app logic to monopoly_streamlit dir
 - *(streamlit)* Generate app version offline
 - *(streamlit)* Add support for logo dark mode
 - *(tauri)* Make response loop tighter
 
-### 📚 Documentation
+### Documentation
 
 - *(README)* Add about, installation, usage
 
-### ⚙️ Miscellaneous Tasks
+### Miscellaneous Tasks
 
 - *(streamlit)* Disable telemetry, add viewer mode
 - Add pre-commit hook for cargo fmt
 
 ## [0.2.0] - 2024-06-22
 
-### ⛰️ Features
+### Features
 
 - Add streamlit app
 - Improve password handling
@@ -462,13 +462,13 @@
 - Add support for multiple files
 - Provide support for python 3.10
 
-### 🛠️ Bug Fixes
+### Bug Fixes
 
 - Use non reserved attribute for document file name
 - Contact page badges
 - *(build)* Remove mypy from main dependencies
 
-### 🚜 Refactor
+### Refactor
 
 - Use formatted column names for dataframe
 - Use .read() instead of getbuffer
@@ -477,12 +477,12 @@
 - *(ci)* Only build app when tags are pushed
 - *(build)* Use pake instead of nativefier
 
-### 📚 Documentation
+### Documentation
 
 - Add FAQ
 - Update about
 
-### ⚙️ Miscellaneous Tasks
+### Miscellaneous Tasks
 
 - Add badges to contact
 - Add currency type to amount col name

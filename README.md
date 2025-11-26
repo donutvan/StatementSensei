@@ -3,7 +3,7 @@
 Statement Sensei converts bank statement PDFs to CSVs using the [monopoly](https://github.com/benjamin-awd/monopoly) CLI library. The offline version of the app is available on the [releases](https://github.com/benjamin-awd/statementsensei/releases) page.
 
 <h3 align="center">
-    🎉 Statement Sensei is now live! 🎉
+    Statement Sensei is now live!
     <br><br>
     Try it out: <br>
     <a href="https://statementsensei.streamlit.app/">https://statementsensei.streamlit.app/</a>
@@ -17,31 +17,31 @@ Statement Sensei converts bank statement PDFs to CSVs using the [monopoly](https
 
 Statement Sensei can be run as an offline application on Windows, MacOS or Linux.
 
-> ⚠️ Note: Windows does not work currently due to upstream build issuess with `pdftotext`.
+> Note: Windows does not work currently due to upstream build issuess with `pdftotext`.
 
 The offline application runs Streamlit locally, and uses a [WebView](https://tauri.app/v1/references/webview-versions/) window to view the browser frontend at http://localhost:8501.
 
 Supported banks:
 | Bank                                   | Credit Statement   | Debit Statement       |
 |----------------------------------------|--------------------|-----------------------|
-| Bank of America                        | ✅                 | ✅                   |
-| Bank of Montreal (BMO)                 | ✅                 | ✅                   |
-| Canadian Imperial Bank of Commerce (CIBC) | ✅                 | ✅                   |
-| Canadian Tire Bank                     | ✅                 | ❌                   |
-| Capital One Canada                     | ✅                 | ❌                   |
-| Chase                                  | ✅                 | ❌                   |
-| Citibank                               | ✅                 | ❌                   |
-| DBS/POSB                               | ✅                 | ✅                   |
-| HSBC                                   | ✅                 | ❌                   |
-| Maybank                                | ✅                 | ✅                   |
-| OCBC                                   | ✅                 | ✅                   |
-| Royal Bank of Canada (RBC)             | ✅                 | ✅                   |
-| Scotiabank                             | ✅                 | ✅                   |
-| Standard Chartered                     | ✅                 | ❌                   |
-| TD Canada Trust                        | ✅                 | ✅                   |
-| Trust                                  | ✅                 | ❌                   |
-| UOB                                    | ✅                 | ✅                   |
-| Zürcher Kantonalbank                   | ❌                 | ✅                   |
+| Bank of America                        | Yes                | Yes                  |
+| Bank of Montreal (BMO)                 | Yes                | Yes                  |
+| Canadian Imperial Bank of Commerce (CIBC) | Yes                | Yes                  |
+| Canadian Tire Bank                     | Yes                | No                   |
+| Capital One Canada                     | Yes                | No                   |
+| Chase                                  | Yes                | No                   |
+| Citibank                               | Yes                | No                   |
+| DBS/POSB                               | Yes                | Yes                  |
+| HSBC                                   | Yes                | No                   |
+| Maybank                                | Yes                | Yes                  |
+| OCBC                                   | Yes                | Yes                  |
+| Royal Bank of Canada (RBC)             | Yes                | Yes                  |
+| Scotiabank                             | Yes                | Yes                  |
+| Standard Chartered                     | Yes                | No                   |
+| TD Canada Trust                        | Yes                | Yes                  |
+| Trust                                  | Yes                | No                   |
+| UOB                                    | Yes                | Yes                  |
+| Zürcher Kantonalbank                   | No                 | Yes                  |
 
 # Installation
 

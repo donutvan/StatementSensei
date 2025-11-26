@@ -1,1 +1,1 @@
-from . import categorize, normalize, recurring, train_model, utils  # noqa: F401
+from . import categorize, normalize, pdf_import, recurring, train_model, utils  # noqa: F401
